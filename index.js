@@ -65,6 +65,17 @@ Quyidagi menyudan kerakli bo‘limni tanlang 👇
         },
       }
     );
+  } else {
+    bot.sendMessage(
+      chatId,
+      `
+    ⚠️ Kechirasiz, men sizning xabaringizni tushunmadim.
+
+Iltimos, quyidagi tugmani bosing 👇
+/start
+
+    `
+    );
   }
 });
 
