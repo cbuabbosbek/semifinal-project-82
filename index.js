@@ -7,8 +7,19 @@ const TOKEN = process.env.BOT_TOKEN;
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
+let usersData = [
+  { chatId: 970837493, firstName: "Azizbek", admin: true },
+  { chatId: 7621131970, firstName: "Shahnoza✨️", admin: true },
+  { chatId: 7437221525, firstName: "Ziyoda💞", admin: true },
+  { chatId: 1383618267, firstName: "Жавохир", admin: true },
+  { chatId: 7244321956, firstName: "Diyora🤞", admin: true },
+  { chatId: 6049043081, firstName: "Mavjudabonu", admin: true },
+  { chatId: 8057065769, firstName: "𝓂𝒶𝒻𝓉𝓊𝓃𝒶 💞", admin: true },
+  { chatId: 875072364, firstName: "Abbosbek", admin: true },
+];
+
 bot.on("message", (msg) => {
-  console.log(msg);
+  // console.log(msg);
   const chatId = msg.chat.id;
   const text = msg.text;
   const firstName = msg.chat.first_name;
@@ -67,6 +78,29 @@ Quyidagi menyudan kerakli bo‘limni tanlang 👇
         },
       }
     );
+  } else if (text == "✍️ Ro‘yxatdan o‘tish") {
+    const userExists = usersData.some((user) => user.chatId === chatId);
+    console.log("bormi: ", userExists);
+
+    if (!userExists) {
+      usersData.push({ chatId: chatId, firstName: firstName, admin: false });
+      // usersData = [...usersData, { chatId: chatId, firstName: firstName }];
+    }
+
+    console.log(usersData);
+    // Foydalanuvchiga xabar jo'natish
+    bot.sendMessage(chatId, `Tabriklaymiz, siz ro'yhatdan o'tdingiz! ✅`);
+
+    // Adminga xabar jo'natish
+    usersData.forEach((user) => {
+      // console.log("USER: ", user.admin);
+      if (user.admin) {
+        bot.sendMessage(
+          user.chatId,
+          `Yangi xabar ✅\nUser: ${firstName}\nchatId: ${chatId}\n**************`
+        );
+      }
+    });
   } else {
     bot.sendMessage(
       chatId,
