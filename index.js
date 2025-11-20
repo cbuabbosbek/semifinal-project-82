@@ -1,6 +1,11 @@
 // import TelegramBot from "node-telegram-bot-api";
-const TelegramBot = require("node-telegram-bot-api");
-const { config } = require("dotenv");
+import TelegramBot from "node-telegram-bot-api";
+import { config } from "dotenv";
+import { onElse } from "./src/onElse.js";
+import { onCourses } from "./src/onCourse.js";
+import { onStart } from "./src/onStart.js";
+import { onRegister } from "./src/onRegister.js";
+
 config();
 
 const TOKEN = process.env.BOT_TOKEN;
@@ -25,93 +30,13 @@ bot.on("message", (msg) => {
   const firstName = msg.chat.first_name;
 
   if (text == "/start") {
-    bot.sendMessage(
-      chatId,
-      `
-    👋 Assalomu alaykum, ${firstName}!
-
-📚 100x o‘quv markazining rasmiy botiga xush kelibsiz!
-
-Bu bot orqali siz:
-• Kurslarimiz haqida batafsil ma’lumot olasiz  
-• Kurslarga onlayn ro‘yxatdan o‘tishingiz mumkin  
-• Jadval va to‘lovlar haqida ma’lumot olasiz  
-
-Quyidagi menyudan kerakli bo‘limni tanlang 👇
-
-    `,
-      {
-        reply_markup: {
-          keyboard: [
-            [{ text: "📚 Kurslar" }, { text: "✍️ Ro‘yxatdan o‘tish" }],
-            [{ text: "ℹ️ Markaz haqida" }, { text: "💬 Fikr bildirish" }],
-            [{ text: "❓ Yordam" }],
-          ],
-          resize_keyboard: true,
-        },
-      }
-    );
+    onStart(chatId, firstName);
   } else if (text == "📚 Kurslar") {
-    bot.sendMessage(
-      chatId,
-      `
-    🎓 Bizning o‘quv markazimizda quyidagi kurslar mavjud:
-
-1️⃣ Ingliz tili  
-2️⃣ Rus tili  
-3️⃣ Matematika  
-4️⃣ Dasturlash (Python, Web)  
-5️⃣ Grafik dizayn  
-
-👇 Quyidagi kurslardan birini tanlang va batafsil ma’lumot oling:
-
-    `,
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: "🇬🇧 Ingliz tili", callback_data: "course_english" }],
-            [{ text: "🇷🇺 Rus tili", callback_data: "course_russian" }],
-            [{ text: "🧮 Matematika", callback_data: "course_math" }],
-            [{ text: "💻 Dasturlash", callback_data: "course_programming" }],
-            [{ text: "🎨 Grafik dizayn", callback_data: "course_design" }],
-          ],
-        },
-      }
-    );
+    onCourses(chatId);
   } else if (text == "✍️ Ro‘yxatdan o‘tish") {
-    const userExists = usersData.some((user) => user.chatId === chatId);
-    console.log("bormi: ", userExists);
-
-    if (!userExists) {
-      usersData.push({ chatId: chatId, firstName: firstName, admin: false });
-      // usersData = [...usersData, { chatId: chatId, firstName: firstName }];
-    }
-
-    console.log(usersData);
-    // Foydalanuvchiga xabar jo'natish
-    bot.sendMessage(chatId, `Tabriklaymiz, siz ro'yhatdan o'tdingiz! ✅`);
-
-    // Adminga xabar jo'natish
-    usersData.forEach((user) => {
-      // console.log("USER: ", user.admin);
-      if (user.admin) {
-        bot.sendMessage(
-          user.chatId,
-          `Yangi xabar ✅\nUser: ${firstName}\nchatId: ${chatId}\n**************`
-        );
-      }
-    });
+    onRegister(chatId);
   } else {
-    bot.sendMessage(
-      chatId,
-      `
-    ⚠️ Kechirasiz, men sizning xabaringizni tushunmadim.
-
-Iltimos, quyidagi tugmani bosing 👇
-/start
-
-    `
-    );
+    onElse(chatId);
   }
 });
 
@@ -151,3 +76,5 @@ bot.on("callback_query", (query) => {
 });
 
 console.log("Bot ishga tushdi");
+
+export { bot };
