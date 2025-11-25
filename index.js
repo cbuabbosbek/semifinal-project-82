@@ -5,6 +5,7 @@ import { onElse } from "./src/onElse.js";
 import { onCourses } from "./src/onCourse.js";
 import { onStart } from "./src/onStart.js";
 import { onRegister } from "./src/onRegister.js";
+import mongoose from "mongoose";
 
 config();
 
@@ -12,16 +13,15 @@ const TOKEN = process.env.BOT_TOKEN;
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
-let usersData = [
-  { chatId: 970837493, firstName: "Azizbek", admin: true },
-  { chatId: 7621131970, firstName: "Shahnoza✨️", admin: true },
-  { chatId: 7437221525, firstName: "Ziyoda💞", admin: true },
-  { chatId: 1383618267, firstName: "Жавохир", admin: true },
-  { chatId: 7244321956, firstName: "Diyora🤞", admin: true },
-  { chatId: 6049043081, firstName: "Mavjudabonu", admin: true },
-  { chatId: 8057065769, firstName: "𝓂𝒶𝒻𝓉𝓊𝓃𝒶 💞", admin: true },
-  { chatId: 875072364, firstName: "Abbosbek", admin: true },
-];
+// db connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("db is connected...");
+  })
+  .catch(() => {
+    console.log(`Error: db is not connected...!`);
+  });
 
 bot.on("message", (msg) => {
   // console.log(msg);
