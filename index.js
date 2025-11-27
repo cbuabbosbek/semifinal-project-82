@@ -6,6 +6,8 @@ import { onCourses } from "./src/onCourse.js";
 import { onStart } from "./src/onStart.js";
 import { onRegister } from "./src/onRegister.js";
 import mongoose from "mongoose";
+import User from "./src/models/User.js";
+import onUsers from "./src/onUsers.js";
 
 config();
 
@@ -35,6 +37,8 @@ bot.on("message", (msg) => {
     onCourses(chatId);
   } else if (text == "✍️ Ro‘yxatdan o‘tish") {
     onRegister(chatId);
+  } else if (text == "/users") {
+    onUsers(chatId);
   } else {
     onElse(chatId);
   }
